@@ -48,7 +48,8 @@ router.get('/:id', (req, res) => {
 })
 .then(dbTheProductsData => {
     if (!dbTheProductsData) {
-        res.status(404).json({ message: 'No product with this id' });
+      //sample message for debugging
+        res.status(404).json({ message: 'No product with this id (router.get)' });
         return;
     }
     res.json(dbTheProductsData);
@@ -69,6 +70,7 @@ router.post('/', (req, res) => {
       tagIds: [1, 2, 3, 4]
     }
   */
+
     Product.create({
       product_name: req.body.product_name,
       price: req.body.price,
@@ -113,6 +115,7 @@ router.put('/:id', (req, res) => {
       // get list of current tag_ids
       const productTagIds = productTags.map(({ tag_id }) => tag_id);
       // create filtered list of new tag_ids
+      //from starter code
       const newProductTags = req.body.tagIds
         .filter((tag_id) => !productTagIds.includes(tag_id))
         .map((tag_id) => {
@@ -122,7 +125,9 @@ router.put('/:id', (req, res) => {
           };
         });
       // figure out which ones to remove
+      //filter method
       const productTagsToRemove = productTags
+      // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter
         .filter(({ tag_id }) => !req.body.tagIds.includes(tag_id))
         .map(({ id }) => id);
 
@@ -148,7 +153,9 @@ router.delete('/:id', (req, res) => {
 })
 .then(dbTheProductsData => {
     if (!dbTheProductsData) {
-        rs.status(404).json({ message: 'No product with this id' });
+
+      //custom error message for debugging
+        rs.status(404).json({ message: 'No product with this id (router.delete)' });
         return;
     }
     res.json(dbTheProductsData);

@@ -52,7 +52,9 @@ router.get('/:id', (req, res) => {
       if (!dbTagData) {
         res
           .status(404)
-          .json({ message: "No tag with this ID." });
+
+          //custom error for debugging
+          .json({ message: "No tag with this ID (findOne)." });
         return;
       }
       res.json(dbTagData);
@@ -92,7 +94,9 @@ router.put('/:id', (req, res) => {
       if (!dbTagData[0]) {
         res
           .status(404)
-          .json({ message: 'No tag was with this ID.' });
+
+          //custome error for debugging
+          .json({ message: 'No tag was with this ID (router.put).' });
         return;
       }
       res.json(dbTagData);
@@ -114,7 +118,8 @@ router.delete('/:id', (req, res) => {
       if (!dbTagData) {
         res
           .status(404)
-          .json({ message: 'No tag with this ID.' });
+          //custom error for debugging
+          .json({ message: 'No tag with this ID (router.delete).' });
         return;
       }
       res.json(dbTagData);
