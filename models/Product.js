@@ -18,35 +18,41 @@ Product.init(
     },
   },
    //adding produce name and price
-  product_name: {
+  {product_name: {
     type: DataTypes.STRING,
     allowNull: false
   },
+  },
 
   // price categories
-  price: {
+  {price: {
     type: DataTypes.DECIMAL,
     allowNull:false
   },
- //stock categories
-  stock: {
+  },
+
+  //stock categories
+  {stock: {
     type: DataTypes.INTEGER,
     allowNull: false,
     defaultValue: 10,
     validate: {
       isNumeric: true,
     }
+  }
   },
  //adding category id
 
 
-category_id: {
+{ category_id: {
   type: DataTypes.INTEGER,
   references: {
     model: "category",
     key: "id",
   },
+}
 },
+
 
   {
     sequelize,
