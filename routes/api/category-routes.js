@@ -10,7 +10,7 @@ router.get('/', (req, res) => {
   Category.findAll({
     
   
-     // attributes: ["id", "category_name"], does not require
+     // attributes: ["id", "category_id"], does not require
   // be sure to include its associated Products
 
   include: 
@@ -88,7 +88,7 @@ router.post('/', (req, res) => {
 
 
   Category.create({
-    category_name: req.body.category_name
+    category_id: req.body.category_id
   })
 
   //fixed typo
@@ -110,7 +110,7 @@ router.put('/:id', (req, res) => {
 
   Category.update(req.body, {
     //{
-     // category_name: req.body.category_name,
+     // category_id: req.body.category_id,
     //},
 
     
