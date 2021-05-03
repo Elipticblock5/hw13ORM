@@ -8,16 +8,18 @@ const { Tag, Product, ProductTag } = require('../../models');
 router.get('/', (req, res) => {
   // find all tags
   Tag.findAll({
-    attributes: ["id", "tag_name"],
-    include: [
+   // attributes: ["id", "tag_name"],
+
+    include: 
       {
         model: Product,
-        attributes: ["id", "product_name", "price", "stock", "category_id"],
-        through: ProductTag,
-        as: "products",
-      },
-    ],
-  })
+        attributes: ["id", "product_name", "price", "stock", "category_id"]
+        //through: ProductTag,
+       // as: "products",
+      }
+    })
+
+
     .then((dbTagData) => res.json(dbTagData))
     .catch((err) => {
       console.log(err);
@@ -35,15 +37,17 @@ router.get('/:id', (req, res) => {
     where: {
       id: req.params.id,
     },
-    include: [
+    include: 
       {
         model: Product,
         attributes: ["id", "product_name", "price", "stock", "category_id"],
-        through: ProductTag,
-        as: "products",
-      },
-    ],
+        //through: ProductTag,
+        //as: "products",
+      }
+    
   })
+
+
     .then((dbTagData) => {
       if (!dbTagData) {
         res
@@ -67,6 +71,7 @@ router.post('/', (req, res) => {
   Tag.create({
     tag_name: req.body.tag_name,
   })
+
     .then((dbTagData) => res.json(dbTagData))
     .catch((err) => {
       console.log(err);
@@ -81,13 +86,13 @@ router.put('/:id', (req, res) => {
   Tag.update(req.body, {
     where: {
       id: req.params.id,
-    },
+    }
   })
     .then((dbTagData) => {
       if (!dbTagData[0]) {
         res
           .status(404)
-          .json({ message: 'No tag was found with this ID.' });
+          .json({ message: 'No tag was with this ID.' });
         return;
       }
       res.json(dbTagData);
@@ -109,7 +114,7 @@ router.delete('/:id', (req, res) => {
       if (!dbTagData) {
         res
           .status(404)
-          .json({ message: 'No tag was found with this ID.' });
+          .json({ message: 'No tag with this ID.' });
         return;
       }
       res.json(dbTagData);

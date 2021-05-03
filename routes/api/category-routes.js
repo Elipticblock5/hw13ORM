@@ -1,27 +1,34 @@
 const router = require('express').Router();
 const { Category, Product } = require('../../models');
-const sequelize = require('./config/connection');
+
 
 // The `/api/categories` endpoint
 
 router.get('/', (req, res) => {
   // find all categories
+  //using findAll method
   Category.findAll({
     
   
-      attributes: ["id", "category_name"],
+     // attributes: ["id", "category_name"], does not require
   // be sure to include its associated Products
 
-  include: [
+  include: 
     {
       model: Product,
-      attributes: ["id", "product_name", "price", "stock", "category_id"],
-    },
-  ],
-})
+      attributes: ["id", "product_name", "price", "stock", "category_id"]
+    } 
+  
+  })
 
-  .then((dbCategoryData) => res.json(dbCategoryData))
-  .catch((err) => {
+  .then(dbTheCategoriesData => {
+    if (!dbTheCategoriesData) {
+      res.status(404).json({ message: 'We could not find any categories.'});
+      return;
+    }
+    res.json(dbTheCategoriesData);
+  })
+  .catch(err => {
     console.log(err);
     res.status(500).json(err);
   });
@@ -30,11 +37,15 @@ router.get('/', (req, res) => {
 
 router.get('/:id', (req, res) => {
   // find one category by its `id` value
+  //using findOne method
+
   Category.findOne({
     where: {
       id: req.params.id
     },
-    include: [
+
+
+    include: 
       {
         model: Product,
         attributes: [
@@ -43,18 +54,23 @@ router.get('/:id', (req, res) => {
           'price',
           'stock',
           'category_id'
-        ],
-      },
-    ],
+        ]
+      }
+    })
 
-  })
-  .then(dbCategoryData => {
-    if (!dbCategoryData) {
-      res.status(404).json({ message: 'We cannot find any category with this ID.'});
+
+//then statment for findONE
+  .then(dbTheCategoriesData => {
+
+    //using logical not operator
+    if (!dbTheCategoriesData) {
+      res.status(404).json({ message: 'We cannot find a category with this ID.'});
       return;
     }
-    res.json(dbCategoryData);
+    res.json(dbTheCategoriesData);
   })
+
+  //copied catch err from above
   .catch(err => {
     console.log(err);
     res.status(500).json(err);
@@ -68,10 +84,18 @@ router.get('/:id', (req, res) => {
 
 router.post('/', (req, res) => {
   // create a new category
+  //create method used
+
+
   Category.create({
     category_name: req.body.category_name
   })
-  .then(dbProductData => res.json(dbProductData))
+
+  //fixed typo
+  .then(dbTheCategoriesData => res.json(dbTheCategoriesData))
+  
+
+  //catch err copied from above
   .catch(err => {
     console.log(err);
     res.status(500).json(err);
@@ -82,22 +106,27 @@ router.post('/', (req, res) => {
 //put route
 router.put('/:id', (req, res) => {
   // update a category by its `id` value
-  Category.update(
-    {
-      category_name: req.body.category_name,
-    },
+  //update method
 
-    {
-      where: req.params.id,
-    },
+  Category.update(req.body, {
+    //{
+     // category_name: req.body.category_name,
+    //},
+
+    
+      where: {
+        id: req.params.id
+      } //req.params.id,
+    })
   
-  )
-  .then((dbCategoryData) => {
-    if (!dbCategoryData) {
-      res.status(404).json({ message: "No category found with this ID." });
+  
+    //same then statement as above
+  .then((dbTheCategoriesData) => {
+    if (!dbTheCategoriesData) {
+      res.status(404).json({ message: "No category with this ID." });
       return;
     }
-    res.json(dbCategoryData);
+    res.json(dbTheCategoriesData);
   })
   .catch((err) => {
     console.log(err);
@@ -108,6 +137,9 @@ router.put('/:id', (req, res) => {
 
 router.delete('/:id', (req, res) => {
   // delete a category by its `id` value
+  // destroy method
+
+
   Category.destroy({
     where: {
       id: req.params.id
@@ -115,13 +147,16 @@ router.delete('/:id', (req, res) => {
 
     //then statement
   })
-    .then(dbCategoryData => {
-      if (!dbCategoryData) {
-        res.status(404).json({ message: 'No category found with this ID.' });
+    .then(dbTheCategoriesData => {
+      //reuse logical not
+      if (!dbTheCategoriesData) {
+        res.status(404).json({ message: 'No category with this ID.' });
         return;
       }
-      res.json(dbCategoryData);
+      res.json(dbTheCategoriesData);
     })
+
+    //catch err brought down
     .catch(err => {
       console.log(err);
       res.status(500).json(err);
