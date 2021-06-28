@@ -12,12 +12,13 @@ router.get('/', (req, res) => {
     
 
 
-  include: 
-    {
-      model: Product,
-      attributes: ["id", "category_name"]
-    } 
   
+  attributes: [
+    'id',
+    'category_name'
+  ],
+  
+   include: [Product]
   })
 
   .then(dbTheCategoriesData => res.json(dbTheCategoriesData))
@@ -38,15 +39,15 @@ router.get('/:id', (req, res) => {
     where: {
       id: req.params.id
     },
+    attributes: [
+      'id', 'category_name'
+    ],
+   
+    include: [Product]
+      
 
-
-    include: 
-      {
-        model: Product,
-        attributes: [
-          'id', 'category_name'
-        ]
-      }
+       
+      
     })
 
     

@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const { Tag, Product, ProductTag } = require('../../models');
-const { describe } = require('../../models/Product');
+
 
 // The `/api/tags` endpoint
 
@@ -11,14 +11,15 @@ router.get('/', (req, res) => {
   Tag.findAll({
    // attributes: ["id", "tag_name"],
 
-    include: 
-      {
-        // be sure to include its associated Product data
-        model: Product,
-        attributes: ["id", "tag_name"],
+    
       
        
-      }
+      attributes: ["id", "tag_name"],
+      
+       
+      
+      //includig Product
+      include: [Product]
     })
 
 
@@ -39,13 +40,18 @@ router.get('/:id', (req, res) => {
     where: {
       id: req.params.id,
     },
-    include: 
-      {
-        model: Product,
-        attributes: ["id", "tag_name"],
-      
-      }
+
     
+    
+      
+        
+        
+      attributes: ["id", "tag_name"],
+      
+      
+      
+    //including Product
+    include: [Product],
   })
 
 
@@ -119,7 +125,7 @@ router.delete('/:id', (req, res) => {
         res.status(404).json({ message: 'No tag with this ID (router.delete).' });
         return;
       }
-      res.json(describe);
+      res.json(destroyTag);
     })
     .catch((err) => {
       console.log(err);

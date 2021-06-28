@@ -8,16 +8,10 @@ router.get('/', (req, res) => {
  
   Product.findAll({
     attributes: ['id', 'product_name', 'price', 'stock', 'category_id'],
-    include: [{
-            model: Category,
-            attributes: ['category_id']
-        },
-        {
-            model: Tag,
-            attributes: ['tag_name']
-        }
-    ]
+    include: [Category, Tag]
+      
 })
+
 .then(dbTheProductsData => res.json(dbTheProductsData))
 .catch(err => {
     console.log(err);
@@ -35,15 +29,7 @@ router.get('/:id', (req, res) => {
         id: req.params.id
     },
     attributes: ['id', 'product_name', 'price', 'stock', 'category_id'],
-    include: [{
-            model: Category,
-            attributes: ['category_id']
-        },
-        {
-            model: Tag,
-            attributes: ['tag_name']
-        }
-    ]
+    include: [Category, Tag]
 })
 .then(chooseOne => {
     if (!chooseOne) {
