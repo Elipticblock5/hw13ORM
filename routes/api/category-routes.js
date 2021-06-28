@@ -4,41 +4,35 @@ const { Category, Product } = require('../../models');
 
 // The `/api/categories` endpoint
 
+//findall api
+
 router.get('/', (req, res) => {
-  // find all categories
-  //using findAll method
+  
   Category.findAll({
     
-  
-     // attributes: ["id", "category_id"], does not require
-  // be sure to include its associated Products
+
 
   include: 
     {
       model: Product,
-      attributes: ["id", "product_name", "price", "stock", "category_id"]
+      attributes: ["id", "category_name"]
     } 
   
   })
 
-  .then(dbTheCategoriesData => {
-    if (!dbTheCategoriesData) {
-      //adding custom error message for debugging
-      res.status(404).json({ message: 'We could not categories.'});
-      return;
-    }
-    res.json(dbTheCategoriesData);
-  })
+  .then(dbTheCategoriesData => res.json(dbTheCategoriesData))
   .catch(err => {
     console.log(err);
     res.status(500).json(err);
   });
+  });
+  
 
-});
+
+//fine one by id api
 
 router.get('/:id', (req, res) => {
-  // find one category by its `id` value
-  //using findOne method
+
 
   Category.findOne({
     where: {
@@ -50,52 +44,34 @@ router.get('/:id', (req, res) => {
       {
         model: Product,
         attributes: [
-          'id',
-          'product_name',
-          'price',
-          'stock',
-          'category_id'
+          'id', 'category_name'
         ]
       }
     })
 
-
-//then statment for findONE
-  .then(dbTheCategoriesData => {
-
-    //using logical not operator
-    if (!dbTheCategoriesData) {
-
-      //custom message for debugging
-      res.status(404).json({ message: 'We cannot find category with this ID.'});
-      return;
-    }
-    res.json(dbTheCategoriesData);
-  })
-
-  //copied catch err from above
+    
+  .then(dbTheCategoriesData => res.json(dbTheCategoriesData))
   .catch(err => {
     console.log(err);
     res.status(500).json(err);
   });
+  });
 
-  // be sure to include its associated Products
-});
+ 
 
 
-//post route
+
+// post route for new by name
 
 router.post('/', (req, res) => {
-  // create a new category
-  //create method used
-
+  
 
   Category.create({
-    category_id: req.body.category_id
+    category_name: req.body.category_name
   })
 
-  //fixed typo usin dbTheCategoriesData for easy reference
-  .then(dbTheCategoriesData => res.json(dbTheCategoriesData))
+  
+  .then(newCategoryDB => res.json(newCategoryDB))
   
 
   //catch err copied from above
@@ -106,31 +82,32 @@ router.post('/', (req, res) => {
 });
 
 
-//put route
+//put route API done by ID value
+
 router.put('/:id', (req, res) => {
-  // update a category by its `id` value
-  //update method
+  
 
-  Category.update(req.body, {
-    //{
-     // category_id: req.body.category_id, do not need
-    //},
-
+  Category.update(
     
+    {
+      category_name: req.body.category_name 
+  
+    },
+    {
       where: {
         id: req.params.id
-      } //req.params.id,
+      } 
+
     })
   
   
-    //same then statement as above
-  .then((dbTheCategoriesData) => {
-    if (!dbTheCategoriesData) {
-      //sample error message for debubing
-      res.status(404).json({ message: "No category with this ID (router.put)." });
+    
+  .then((updatedCatID) => {
+    if (!updatedCatID) {
+      res.status(404),json({ message: "No category found with this id" });
       return;
     }
-    res.json(dbTheCategoriesData);
+    res.json(updatedCatID);
   })
   .catch((err) => {
     console.log(err);
@@ -140,7 +117,7 @@ router.put('/:id', (req, res) => {
 
 
 router.delete('/:id', (req, res) => {
-  // delete a category by its `id` value
+
   // destroy method
 
 
@@ -149,20 +126,19 @@ router.delete('/:id', (req, res) => {
       id: req.params.id
     }
 
-    //then statement
+   
   })
-    .then(dbTheCategoriesData => {
+    .then(updatedCatID => {
       //reuse logical not
-      if (!dbTheCategoriesData) {
+      if (!updatedCatID) {
 
         //sample message for debugging
         res.status(404).json({ message: 'No category with this ID (category.destroy).' });
         return;
       }
-      res.json(dbTheCategoriesData);
+      res.json(updatedCatID);
     })
 
-    //catch err brought down
     .catch(err => {
       console.log(err);
       res.status(500).json(err);
