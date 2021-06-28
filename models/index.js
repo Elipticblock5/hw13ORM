@@ -15,9 +15,9 @@ Product.belongsTo(Category, {
 //added hasMany tag, debuggin error
 
 
-Category.hasMany(Product, {
+Category.belongsToMany(Product, {
   through: ProductTag,
-  foreignKey: 'product_id',
+  foreignKey: 'category_id',
 });
 
 // Products belongToMany Tags (through ProductTag)
